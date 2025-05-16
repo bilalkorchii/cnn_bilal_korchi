@@ -73,36 +73,49 @@ export default function Home() {
       setIsVerifying(false)
     }
   }
-
-  const predictCategory = async () => {
-    setIsLoading(true)
-    try {
-      // Simulate API call to predict category
-      const response = await fetch("/api/predict-category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          image: formData.productImage,
-          title: formData.productTitle,
-        }),
-      })
-
-      const data = await response.json()
-
-      setFormData({
-        ...formData,
-        predictedCategory: data.category,
-      })
-
-      handleNext()
-    } catch (error) {
-      console.error("Error predicting category:", error)
-    } finally {
-      setIsLoading(false)
-    }
+  function base64ToFile(base64String, filename) {
+  // Remove the data:image/...;base64, part
+  const arr = base64String.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while(n--) {
+    u8arr[n] = bstr.charCodeAt(n);
   }
+  return new File([u8arr], filename, {type: mime});
+}
+
+const predictCategory = async () => {
+  setIsLoading(true)
+  try {
+    let file = formData.productImage
+    if (typeof file === "string" && file.startsWith("data:image")) {
+      // Convert base64 to File
+      file = base64ToFile(file, "image.jpg")
+    }
+
+    const fd = new FormData()
+    fd.append("file", file)
+    fd.append("title", formData.productTitle)
+
+    const response = await fetch("http://127.0.0.1:8000/predict/", {
+      method: "POST",
+      body: fd,
+    })
+
+    const data = await response.json()
+
+    setFormData({...formData, predictedCategory: data.category})
+
+    handleNext()
+  } catch (error) {
+    console.error("Error predicting category:", error)
+  } finally {
+    setIsLoading(false)
+  }
+}
+
 
   const postToShopify = async () => {
     setIsPosting(true)
@@ -118,7 +131,7 @@ export default function Home() {
 
       const data = await response.json()
 
-      if (data.success) {
+      if (data) {
         setPostSuccess(true)
       }
     } catch (error) {

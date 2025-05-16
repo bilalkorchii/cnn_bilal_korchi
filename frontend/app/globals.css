@@ -80,6 +80,10 @@
   margin-left: 0;
   margin-right: 0.5rem;
 }
+#__nextjs-error-overlay, 
+nextjs-portal {
+  display: none !important;
+}
 
 /* Font family */
 .font-poppins {

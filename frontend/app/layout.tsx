@@ -1,3 +1,4 @@
+
 import { Poppins, Cairo } from "next/font/google"
 import { LanguageProvider } from "@/components/language-provider"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -10,6 +11,7 @@ const poppins = Poppins({
   display: "swap",
 })
 
+
 const cairo = Cairo({
   subsets: ["arabic"],
   weight: ["300", "400", "500", "600", "700"],
@@ -20,7 +22,7 @@ const cairo = Cairo({
 export const metadata = {
   title: "1335.io - AI-Powered E-commerce",
   description: "AI-Powered Product Category Prediction for Shopify",
-    generator: 'v0.dev'
+  generator: 'bilal korchi'
 }
 
 export default function RootLayout({ children }) {

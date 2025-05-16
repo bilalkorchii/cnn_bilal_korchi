@@ -10,6 +10,8 @@ import { LanguageSwitcher } from "@/components/language-switcher"
 import { useLanguage } from "@/components/language-provider"
 
 export default function Home() {
+  
+
   const { t, isRTL, fontFamily } = useLanguage()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
